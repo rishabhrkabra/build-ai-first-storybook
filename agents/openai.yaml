@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build AI-First Storybook"
+  short_description: "Build design systems agents can use and obey"
+  default_prompt: "Use $build-ai-first-storybook to build, rehabilitate, or evolve a design system that coding agents can consume and follow safely."

@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "version": "__VERSION__",
+  "selectionPolicy": "Only status=ready components may be selected for production. Review records are inspectable blockers.",
+  "components": []
+}

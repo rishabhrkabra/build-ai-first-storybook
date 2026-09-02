@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "name": "__DESIGN_SYSTEM_NAME__",
+  "version": "__VERSION__",
+  "frameworkScope": "framework-neutral contracts; declare implementation frameworks before marking components ready",
+  "authority": {
+    "visual": [],
+    "behavioral": [],
+    "content": [],
+    "precedenceRules": []
+  },
+  "artifacts": {
+    "inventory": "inventory.json",
+    "publicApi": "public-api.json",
+    "contextIndex": "context-index.json",
+    "tokens": "tokens.json",
+    "content": "content.json",
+    "rules": "rules.json",
+    "migrations": "migrations.json",
+    "recipes": "recipes.json",
+    "decisions": "decisions.json",
+    "release": "release.json"
+  },
+  "hostedEndpoints": {
+    "current": "/ai/current.json",
+    "catalog": "/ai/catalog.json",
+    "inventory": "/ai/inventory.json",
+    "contextIndex": "/ai/context/index.json",
+    "tokens": "/ai/tokens.json",
+    "content": "/ai/content.json",
+    "rules": "/ai/rules.json",
+    "migrations": "/ai/migrations.json",
+    "recipes": "/ai/recipes.json",
+    "decisions": "/ai/decisions.json",
+    "entryPoint": "/ai/llms.txt"
+  },
+  "requirements": {
+    "failClosedSelection": true,
+    "selfContainedHostedInterface": true,
+    "stableBaseUrl": true,
+    "exactRevision": true,
+    "checksummedArtifacts": true,
+    "structuredContent": true,
+    "expiringExceptions": true,
+    "measuredResponsiveFixtures": true,
+    "referenceComparedVisualQa": true
+  }
+}

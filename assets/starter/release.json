@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "name": "__DESIGN_SYSTEM_NAME__",
+  "version": "__VERSION__",
+  "revision": "__REVISION__",
+  "releasedAt": "__RELEASED_AT__",
+  "storybookUrl": "__STORYBOOK_URL__",
+  "checksums": {}
+}

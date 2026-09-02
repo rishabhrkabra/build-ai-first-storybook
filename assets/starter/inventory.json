@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "selectionPolicy": "This file is exhaustive evidence and never grants production selectability. Use public-api.json.",
+  "families": []
+}
