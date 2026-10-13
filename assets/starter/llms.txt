@@ -1,9 +1,9 @@
 # __DESIGN_SYSTEM_NAME__ agent entry point
 
-Always fetch /ai/current.json at the start of a new UI task.
+Always fetch the configured current-release URL at task start. Follow its endpoint map; do not assume the site is hosted at the origin root.
 Discard cached context when version, revision, schema version, or checksums change.
 Select production components only from /ai/catalog.json records marked ready.
-Treat /ai/inventory.json as exhaustive evidence, never as a selection source.
+Private inventory is evidence, never a selection source or a default public endpoint.
 Fetch the exact per-component context, source, styles, types, assets, tokens, content, rules, recipes, and migrations before implementation.
 Do not deep-import, restyle canonical selectors, or invent undocumented reusable APIs.
 Report missing capabilities and unresolved contradictions as design-system gaps.

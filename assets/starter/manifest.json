@@ -1,8 +1,22 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "name": "__DESIGN_SYSTEM_NAME__",
   "version": "__VERSION__",
   "frameworkScope": "framework-neutral contracts; declare implementation frameworks before marking components ready",
+  "frameworks": [],
+  "distribution": {
+    "access": "local-only",
+    "basePath": "/ai",
+    "files": []
+  },
+  "repositoryPolicy": {
+    "configured": false,
+    "sourceRoots": [],
+    "sharedRoots": [],
+    "storyRoots": [],
+    "storyIndex": "",
+    "exportsManifest": ""
+  },
   "authority": {
     "visual": [],
     "behavioral": [],
@@ -12,6 +26,8 @@
   "artifacts": {
     "inventory": "inventory.json",
     "publicApi": "public-api.json",
+    "componentCandidates": "component-candidates.json",
+    "componentLifecycle": "component-lifecycle.json",
     "contextIndex": "context-index.json",
     "tokens": "tokens.json",
     "content": "content.json",
@@ -21,27 +37,16 @@
     "decisions": "decisions.json",
     "release": "release.json"
   },
-  "hostedEndpoints": {
-    "current": "/ai/current.json",
-    "catalog": "/ai/catalog.json",
-    "inventory": "/ai/inventory.json",
-    "contextIndex": "/ai/context/index.json",
-    "tokens": "/ai/tokens.json",
-    "content": "/ai/content.json",
-    "rules": "/ai/rules.json",
-    "migrations": "/ai/migrations.json",
-    "recipes": "/ai/recipes.json",
-    "decisions": "/ai/decisions.json",
-    "entryPoint": "/ai/llms.txt"
-  },
   "requirements": {
     "failClosedSelection": true,
-    "selfContainedHostedInterface": true,
-    "stableBaseUrl": true,
+    "selfContainedInterface": true,
+    "stableEntryPoint": true,
     "exactRevision": true,
     "checksummedArtifacts": true,
     "structuredContent": true,
     "expiringExceptions": true,
+    "privateComponentCandidates": true,
+    "reviewedComponentLifecycle": true,
     "measuredResponsiveFixtures": true,
     "referenceComparedVisualQa": true
   }

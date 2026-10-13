@@ -42,8 +42,8 @@ Claude Code discovers it automatically from the `SKILL.md` frontmatter. Ask for 
 | Path | Purpose |
 |---|---|
 | `SKILL.md` | The workflow: authority, inventory, public API, foundations, contracts, Storybook IA, hosted agent interface, validation, learning loop, stop conditions. |
-| `references/` | Deep dives loaded on demand: operating model, component contracts, Storybook information architecture, the hosted agent interface, quality gates, rehabilitating existing interfaces, continuous evolution, framework adapters, blind evaluation, failure modes. |
-| `scripts/` | Stdlib-only Python: `scaffold.py` creates a framework-neutral starter contract, `validate.py` checks it, `update_checksums.py` refreshes integrity hashes. |
+| `references/` | Deep dives loaded on demand: operating model, component contracts, composition contracts, token architecture, foundation-first migration, Storybook information architecture, the hosted agent interface, the portable contract, quality gates, change completion, generative feedback, iconography, rehabilitating existing interfaces, continuous evolution, framework adapters, blind evaluation, failure modes, implementation lessons. |
+| `scripts/` | Stdlib-only Python: `scaffold.py` creates a framework-neutral starter contract, `validate.py` checks it, `update_checksums.py` refreshes integrity hashes, `validate_token_graph.py` checks token references, `validate_composition.py` checks measured layout relationships, `validate_change_sync.py` checks that a design-system change reached every affected layer, `export_public.py` builds the allow-listed `/ai` tree. `test_*.py` cover each. |
 | `assets/starter/` | The starter contract: manifest, inventory, public API, context index, tokens, content, rules, recipes, migrations, decisions, release, and an `llms.txt` agent entry point. |
 | `agents/openai.yaml` | Display metadata for OpenAI-compatible agent runners. |
 

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 2,
+  "publication": "private",
+  "selectable": false,
+  "selectionPolicy": "A recurrence threshold may open review. It never grants public or shared placement.",
+  "reviewThreshold": {
+    "occurrences": 3,
+    "independentModules": 2
+  },
+  "candidates": []
+}

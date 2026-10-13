@@ -30,7 +30,10 @@ Migration notes
 Validation coverage
 ```
 
-Avoid decorative props such as `state="hover"` in production APIs. Let native interaction create hover, focus, pressed, disabled, loading, invalid, expanded, and selected states. Use visual-state props only in stories when the browser cannot deterministically produce a state for review.
+Avoid decorative props such as `state="hover"` in production APIs. Let actual
+pointer/keyboard interaction create transient hover/focus/pressed states. Use real
+controlled or internal state for loading, invalid, expanded, selected and disabled
+behavior. Story-only state simulation must not substitute for interaction tests.
 
 ## State modelling
 
@@ -64,7 +67,8 @@ Document behavior, not just screenshots:
 - placement and collision behavior;
 - supported viewport/container fixtures.
 
-Use container queries when behavior depends on the component’s allocated width. Use viewport breakpoints only for page-level decisions.
+Prefer container queries when behavior depends on allocated width; use viewport
+breakpoints for viewport-dependent behavior, including viewport-bound overlays.
 
 For resizable components, specify pointer and keyboard resizing, clamp rules, persistence, and re-clamping after viewport change.
 
@@ -81,7 +85,27 @@ For resizable components, specify pointer and keyboard resizing, clamp rules, pe
 
 ## Composition and publication
 
-Publish a nested element only when it has a plausible independent consumer.
+Use this admission order before creating a family:
+
+1. Reuse a canonical primitive or approved composition that already owns the capability.
+2. If behavior is missing, add a justified screen-neutral prop, slot or state to that owner.
+3. Keep domain data/state/callback translation in a thin feature-local adapter.
+4. Propose a new family only when purpose, behavior or interaction truly differs.
+
+Composites must use DS primitives for the visuals those primitives own. Native
+and headless code belongs inside foundational primitives where appropriate;
+do not create circular dependencies merely to claim primitive usage. A brand
+colour supplied as user content is different from a hard-coded selection token.
+
+Examples: an account-state adapter maps domain statuses to Badge; a numeric
+amount adapter keeps parsing/validation while Input owns its field boundary;
+an error adapter supplies retry callbacks while Alert owns layout/actions.
+Avoid props such as `billingScreen` or `isProjectModal` that conceal visual clones.
+Preserve different semantics: a canvas loading screen and a chat generation card
+may share progress primitives without sharing the same container or interaction.
+
+Publish a nested element only with a justified independent contract and owner
+review. Recurrence is one signal, not a prerequisite for a needed foundational primitive.
 
 Keep private:
 
@@ -106,7 +130,7 @@ Every ready component should include:
 
 - a controlled playground;
 - every semantic variant and size;
-- native hover/focus/pressed/disabled/loading states;
+- applicable hover/focus/pressed/disabled/loading states using real behavior;
 - boundary content: empty, long, dense, error, loading;
 - responsive fixtures at agreed widths;
 - interaction assertions;

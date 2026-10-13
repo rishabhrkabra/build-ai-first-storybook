@@ -38,6 +38,11 @@ Declare a framework supported only after a clean consumer can:
 
 One ready adapter does not make all adapters ready. Compute production selectability for the target framework.
 
+The portable v2 starter currently models one framework binding per component record,
+not a full multi-adapter release model. For the same semantic component in multiple
+frameworks, extend and version the schema/selector with independently verified adapter
+records before publishing them; do not duplicate IDs or claim untested adapters ready.
+
 ## Avoid overfitting
 
 - Encode observable behavior, not preferred libraries.

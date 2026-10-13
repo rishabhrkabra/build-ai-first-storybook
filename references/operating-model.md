@@ -25,6 +25,12 @@ Record authority by concern instead of naming one source “the truth” for eve
 
 Write conflict rules before implementation. A common rule is “design wins visual presentation; production wins behavior,” but never assume it.
 
+Each ruling needs concern, scope, source/version, approver and superseded ruling
+IDs. Resolve contradictions within the proposed source (including scale tables
+versus written rules) before comparing with code. Later explicit corrections
+override earlier ones only in scope. Never apply a sidebar-only change to toasts,
+or reinterpret a live-presence indicator as an invitation action.
+
 ## Evidence hierarchy
 
 Prefer evidence in this order unless the recorded authority model says otherwise:
@@ -62,7 +68,10 @@ Do not let reuse become an excuse to preserve wrong foundations. Create a clean 
 
 ## Foundation-first migration
 
-In an existing system, migrate foundations before component families. A component-first pilot can prove mechanics, but it must remain review-only and must not set the migration sequence.
+When foundations change, review their delta before dependent components. Reuse
+unchanged approved foundations in maintenance; do not impose a whole-system
+migration on an isolated fix. A pilot can prove mechanics without approving a
+new global visual direction.
 
 Use this order:
 
@@ -135,6 +144,10 @@ Do not assume a headless library supplies hover styling, design tokens, componen
 - Keep replacements API-compatible when consumers must not be manually updated.
 - Prefer adapters and codemods over silent breaking changes.
 - Mark review evidence visibly instead of deleting it prematurely.
-- Give temporary review evidence an explicit retention policy: what removes it, what remains, and who verifies the condition. After approved adoption is merged, deployed, and verified, remove temporary Storybook review groups and retain canonical documentation plus versioned migration provenance.
+- Give temporary evidence a retention policy separating source fixtures, private
+  CI/PR artifacts and production output. Exclude temporary review/engineering
+  evidence from production publication before release. Delete source fixtures
+  only when authorized retention conditions are met; preserve reusable tests,
+  canonical documentation and required provenance. A renamed group is not deletion.
 - Record every breaking field or prop change in a machine-readable migration entry.
 - Never reuse a canonical component name for a materially different contract without a major version.

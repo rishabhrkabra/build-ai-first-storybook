@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "name": "__DESIGN_SYSTEM_NAME__",
   "version": "__VERSION__",
   "revision": "__REVISION__",

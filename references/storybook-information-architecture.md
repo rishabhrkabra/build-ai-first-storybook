@@ -10,7 +10,7 @@
 
 ## Catalogue structure
 
-Prefer this top-level order:
+One possible top-level order (adapt to the project's audience):
 
 ```text
 Get Started
@@ -21,21 +21,14 @@ Brand
 Governance
 ```
 
-Name every section after a category the design world already recognises. A
-section invented for the system's own convenience is a filing decision the
-reader has to learn. Three failed that test in review and were removed:
-`Containment` (nobody groups accordions and cards under one word),
-`Identity` (it held third-party platform marks, which is not what the word
-means to anyone else), and a `Start Here` sitting beside an existing
-`Get Started` that held the same thing.
+Prefer names readers can predict. Actions, Forms, Navigation, Overlays,
+Feedback, Data Display and Layout are examples, not an exhaustive standard.
+Identity or Containment may fit another project's taxonomy; do not inherit a
+ban from a prior review. Avoid duplicate introductory sections.
 
-Brand holds what could belong to no one else — mascot artwork, the wordmark,
-proprietary marks. Everything in Components and Foundations is a good version of
-something every product has. Interface icons are Foundations, where every mature
-system puts them; an avatar is a component. The test for a candidate is whether
-a competitor could ship the same thing.
-
-Keep component categories semantic: Actions, Forms, Navigation, Overlays, Feedback, Data Display, Layout, Conversation, or domain-neutral equivalents. `Identity` is deliberately absent from that list.
+Use Brand for identity assets/guidance when helpful, and locate icons where
+this project's readers expect them. A distinctive reusable component is still
+a component. Branding does not determine implementation ownership.
 
 Avoid exposing the repository’s folder history as information architecture.
 
@@ -60,7 +53,8 @@ Use stable story IDs. Renaming a human-facing title should not silently break ag
 
 ## Review and migration evidence
 
-Put all noncanonical material under an unmistakable review namespace. Add a persistent warning in the canvas and metadata containing:
+In local/private review, put noncanonical material under an unmistakable review
+namespace with a persistent warning and metadata containing:
 
 - lifecycle;
 - why it is not selectable;
@@ -72,10 +66,21 @@ Put all noncanonical material under an unmistakable review namespace. Add a pers
 
 Do not hide evidence before classification. Do not let evidence appear beside canonical components without a warning.
 
-Migration Review, where it exists, is a working surface and not a permanent
-museum — and it belongs in source rather than in the hosted catalogue, which is
-a production-facing surface. Review packets and proposals stay checked in and
-stay out of the published index. After the approved production adoption is merged, deployed, and verified against the recorded behavior and visual evidence, delete the temporary Storybook review group. Retain the canonical component documentation, versioned migration entry, and required release provenance.
+Track runtime adoption, story classification and artifact retention separately.
+A titlePrefix can organize temporary review; it neither removes duplicates nor
+migrates consumers. A component without a replacement is not automatically OLD.
+
+Exclude temporary review/visual/engineering evidence from the production story
+index and distributed assets before release. Use local/private review builds or
+CI/PR artifacts when evidence is still needed. Agree whether removal means
+source fixtures, generated assets or hosted routes. Delete source only at the
+authorized retention boundary, preserving reusable tests, canonical docs and
+required provenance. Do not satisfy deletion by renaming a group.
+
+Verify discovery against the production build's index and asset tree, including
+direct URLs. Prefer explicit inclusion scopes. Glob negation and titlePrefix
+behavior depend on the installed Storybook version/configuration; test them
+rather than universalizing a historical incident.
 
 ## Recipes and evaluation screens
 

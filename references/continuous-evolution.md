@@ -6,12 +6,13 @@ Use this reference after the first usable release, or whenever the task includes
 
 1. Target architecture
 2. Change intake and review gates
-3. Executable design constitution
-4. Structured content and tone
-5. Exception and component mining
-6. Recipes, evaluation screens, and GenUI
-7. MCP sequencing
-8. Maturity order and health signals
+3. Lifecycle authority and placement gates
+4. Executable design constitution
+5. Structured content and tone
+6. Exception and component mining
+7. Recipes, evaluation screens, and GenUI
+8. MCP sequencing
+9. Maturity order and health signals
 
 ## Target architecture
 
@@ -70,6 +71,52 @@ Record visual approval, contract approval, lifecycle approval, production adopti
 Figma or another design library can remain visual authority while code remains behavioral authority. If the design-tool API cannot expose required variables or metadata, use a small approved exporter or plugin to create the same reviewed proposal. Code Connect may help map design and code, but it is not a substitute for change governance.
 
 Before implementing vendor integrations, verify current plan limits, event semantics, and supported toolsets in official documentation. Do not freeze transient vendor capabilities into the design-system contract.
+
+## Lifecycle authority and placement gates
+
+Keep three records distinct:
+
+- the public API: approved components that production agents may select;
+- the private candidate registry: evidence and proposals that remain non-selectable;
+- the lifecycle authority registry: separate approvals for public promotion, cross-feature shared placement, deprecation, and retirement.
+
+Start a workflow-specific composition inside its owning feature. A second use, a
+Storybook story, or placement in a generic `components` directory is evidence to
+review, not permission to publish. A recurrence threshold such as three
+occurrences across two independent modules may open a candidate review, but it
+must never change lifecycle state by itself.
+
+For each candidate, record occurrences and owning modules, semantic purpose and
+non-goals, behavioral differences, responsive and accessibility contracts,
+application-logic boundaries, evidence for and against consolidation, and the
+named decision owner. Candidate records must stay private and must not appear in
+the hosted selectable catalogue or agent context until promotion is approved.
+
+Use an inventory baseline only to stop unreviewed growth while an existing
+system is audited. It is a **freeze line, not an endorsement**. Protect the
+baseline and authority files with source ownership or equivalent review rules;
+adding an item to the baseline cannot launder an unapproved component into the
+system.
+
+Fail closed when a change adds any of these without the matching approval:
+
+- a public design-system family or export;
+- a published canonical story;
+- a cross-feature shared component location;
+- a private candidate to a public `/ai` or MCP selection surface;
+- removal, deprecation, or replacement of a frozen public family.
+
+Make the earliest developer-facing failure useful. State what crossed the
+boundary, why it is not yet reusable, where the feature-local implementation
+belongs, how to register a candidate, and which approval would permit the
+change. Run the same rule in CI so bypassing a local hook cannot change the
+outcome.
+
+Zero static imports or observed runtime consumers may open a retirement review;
+they cannot prove that a component is safe to remove. Dynamic imports, route
+registries, configuration, downstream packages, and unobserved states all
+create false zeroes. Require reachability evidence plus an explicit owner
+decision before deprecation or deletion.
 
 ## Executable design constitution
 
@@ -172,9 +219,45 @@ report_design_system_gap
 propose_component_candidate
 ```
 
-Each operation must read the same registry used by Storybook and `/ai`. Add authentication, cache identity, observability, permissions, and backwards compatibility before calling the MCP production-ready.
+Retrieval operations read the same approved projection used by Storybook and
+`/ai`. `report_design_system_gap` and `propose_component_candidate` above write
+proposals and are not read-only tools: expose them only in an authorized workflow.
+Add authentication, cache identity, observability, permissions and compatibility
+before calling an MCP production-ready.
+
+Split MCP capability by environment. The hosted Storybook should expose
+retrieval and documentation only. Development, mutation, interaction-test, and
+repair tools belong in an authenticated local or CI mode. Starting that mode
+does not grant lifecycle authority.
+
+Use “self-healing” to mean a bounded proposal loop:
+
+```text
+detect drift or failure
+→ diagnose it against canonical contracts
+→ repair on a branch
+→ run the exact required gates
+→ produce before/after evidence and a reviewable PR
+```
+
+The loop may generate tests, documentation, codemods, migrations, and repair
+commits. It must not silently promote or deprecate a component, delete source,
+accept a changed visual baseline, merge, deploy, or rewrite an approval record.
 
 Enable vendor-provided documentation, development, or test tools only after curating their manifests. More tools over a noisy catalogue make agents confidently wrong faster.
+
+Track retrieval, development/testing, diagnosis and repair separately as
+`absent`, `configured` or `exercised`. Installation flags do not prove operation:
+make a safe real protocol call, retrieve a known contract and execute a
+representative test in the authorized environment. Record tool/version, result
+and limitations. Set a bounded retry budget (for example two repair attempts,
+project-configurable); escalate semantic uncertainty or repeated unchanged
+failure. Never silently accept a new visual baseline to make the loop pass.
+
+The portable scripts do not start an MCP or implement this loop. Their schema
+checker and configured-scope policy adapter are described in
+[portable-contract.md](portable-contract.md). A missing adapter or protected
+review configuration is an implementation gap, not an enforced policy.
 
 ## Maturity order and health signals
 
@@ -189,7 +272,11 @@ Build in this order unless evidence justifies a change:
 7. Add constrained GenUI, then a thin MCP when retrieval or operations justify it.
 8. Add automated cross-repository migration proposals only after one-repository migrations are reliable.
 
-For an existing design-system migration, treat foundations as batch zero. Review their effect at foundation, component, production-module, and full-screen levels before continuing component-by-component. Remove temporary Migration Review stories after adopted changes are merged, deployed, and verified; keep canonical docs and versioned provenance.
+When foundations change, review their effect at foundation, component,
+production-module and full-screen levels before migrating dependents. Reuse
+unchanged approved roles for maintenance. Exclude temporary review/engineering
+stories from production output before release; delete private/source evidence
+only at its authorized retention boundary, keeping canonical docs and provenance.
 
 Track readiness by more than component count:
 
@@ -200,5 +287,14 @@ Track readiness by more than component count:
 - migrations without codemods or consumer proof;
 - stale hosted endpoints or mismatched revisions;
 - blind tasks that required guessing or private context.
+
+Keep generated Storybook builds, packaged mirrors, and documentation copies out
+of compiler and test discovery. Otherwise one source can be discovered twice
+and derived output can appear as phantom tests. Verify the exact command CI
+runs, not a cheaper neighboring command.
+
+Every hosted preview must publish an immutable build identity and be checked
+against the expected commit before visual review. A healthy URL can still be a
+stale artifact.
 
 The operating test is simple: recurring taste becomes structured rules, tests, and examples; human judgment remains for genuinely new semantics, product trade-offs, and final optical review.

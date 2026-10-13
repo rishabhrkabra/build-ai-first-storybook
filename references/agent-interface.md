@@ -1,105 +1,86 @@
 # Agent interface
 
-## Contents
+## Access and source contract
 
-1. Hosted contract
-2. Endpoint semantics
-3. Component record
-4. Cache and release policy
-5. Consumption workflow
-6. Agent instruction adapters
+A rendered Storybook alone is insufficient when an agent cannot discover supported
+APIs, styling, assets and composition rules. Provide an authorized interface appropriate
+to the project: same-origin endpoints, authenticated docs/package registry, or local
+artifacts. Do not force proprietary source onto a public site. Provide exact source,
+CSS, types and asset bindings or an approved installable package interface, with a
+revision and usage contract. A mutable archive must not be the only current source.
 
-## Hosted contract
+Keep one private authoring registry and generate delivery surfaces from it. Read
+[portable-contract.md](portable-contract.md) for the shipped v2 scripts, their stricter
+local-file mapping format, explicit v1 upgrade and limitations. The package-only
+delivery alternative requires an adapter and its own import/build validation; the
+supplied file exporter does not implement a package registry.
 
-A rendered Storybook is insufficient when agents cannot retrieve exact source, CSS, types, assets, and rules. Publish these from the same stable origin as Storybook.
+## Generated endpoints
 
-Avoid a required downloadable archive. Mutable archives create stale local copies and ambiguous update behavior. An archive may exist as an optional snapshot, never as the only complete interface.
+`/ai` is an example configurable base path, not a requirement. Follow the current
+release's endpoint map; never guess URLs or advertise files that were not generated.
 
-## Endpoint semantics
-
-Recommended endpoints:
-
-| Endpoint | Purpose |
+| Generated artifact | Purpose |
 |---|---|
-| `/ai/current.json` | Release pointer, revision, timestamps, checksums, endpoint map |
-| `/ai/catalog.json` | Fail-closed allow-list for production selection |
-| `/ai/inventory.json` | Exhaustive source coverage and lifecycle evidence |
-| `/ai/context/index.json` | Lightweight index of component contexts |
-| `/ai/context/<id>.json` | Selective component API, contracts, provenance, and artifact links |
-| `/ai/tokens.json` | Typed design tokens and platform bindings |
-| `/ai/content.json` | Structured voice, tone, terminology, and UI-message contracts |
-| `/ai/rules.json` | Enforceable consumer rules and detectors |
-| `/ai/migrations.json` | Structured API, token, artifact, and behavior changes |
-| `/ai/recipes.json` | Approved compositions and page-shell rules |
-| `/ai/decisions.json` | Authority conflicts, resolutions, and blockers |
-| `/ai/llms.txt` | Short entry point for an unfamiliar agent |
+| `current.json` | Release revision, schema, access mode, checksums, endpoint map |
+| `catalog.json` | Ready-only component selection, framework and artifact bindings |
+| `context/index.json` | Lightweight index of the same ready IDs |
+| `context/<id>.json` | Selective component contract generated from that same record |
+| `llms.txt` | Short current-release entry point |
+| Explicitly reviewed optional files | Tokens, content rules, consumer rules, migrations, recipes and distributable source/assets |
 
-Provide raw source/CSS/type/asset URLs in each ready catalogue record or an equivalent package endpoint.
+Inventory, candidates, approval receipts, private authority and unresolved decisions
+stay private. Publish a deliberately sanitized summary only when authorized; never
+expose these registries wholesale. Source/CSS/type/font licensing and privacy review
+apply before export. A manifest field is not server access control.
 
-Publish only allow-listed distributable artifacts. Scan for credentials, private endpoints, restricted fonts, unlicensed assets, and proprietary application code before hosting source.
+## Authoring record versus exported record
 
-## Component record
+Use `id` for identity, `name` for a human-facing canonical name and `sourceName` in
+private inventory for extraction joins. Use `storyIds` consistently, never a parallel
+`stories` field. Private records reference repo-relative local paths. The exporter
+turns **approved mapped** paths into URL paths and strips private authority/verification
+details. It does not publish every key present in an authoring record.
 
-At minimum, a ready component record needs:
+A declared-ready record binds `framework`, `importPath`, `source`, `styles`, `types`,
+`docs`, `storyIds`, `assets` where relevant, and a measurable contract:
 
-```json
-{
-  "id": "stable-id",
-  "name": "Human-facing canonical name",
-  "status": "ready",
-  "importPath": "@scope/design-system/component",
-  "source": ["/ai/source/component.tsx", "/ai/source/component.css"],
-  "types": "/ai/source/component.d.ts",
-  "assets": [],
-  "stories": ["stable-story-id"],
-  "contract": {
-    "states": [],
-    "behavior": [],
-    "responsive": [],
-    "accessibility": [],
-    "composition": []
-  },
-  "authority": [],
-  "tests": []
-}
-```
+- states, including disabled/loading/error/empty where applicable;
+- behavior, events, focus and dismissal;
+- responsive sizing, overflow and container/viewport ownership;
+- accessibility semantics and interaction expectations;
+- supported composition and non-goals.
 
-Keep `id`, display `name`, and original `sourceName` distinct. Use IDs for lookup, canonical names for humans, and source names only for extraction joins.
+Authoring also records exact tests, authority and revision-bound verification receipts.
+The full format lives in the starter and validator; do not invent a second example
+schema with different keys. Existence of a receipt is not proof that its checks ran.
 
-## Cache and release policy
+## Cache and release
 
-- Keep the base URL stable.
-- Change semantic version and immutable source revision for every published change.
-- Include checksums for catalogue, inventory, recipes, decisions, and source bundles.
-- Version every JSON schema and publish migrations when it changes.
-- Instruct agents to fetch `current.json` for every new task.
-- Do not tell agents to reuse a previously downloaded package without comparing revision and checksums.
-- Keep old immutable releases available when consumers need reproducibility.
-- Prefer a small index plus per-component context over one enormous agent document.
+Keep a stable entry point, immutable release identity and exact distributed checksums.
+Version schemas and publish upgrade notes. Fetch `current.json` for every new task;
+pin the selected revision for that task and explicitly handle changes instead of
+mixing artifacts from different releases. Retain immutable releases when required
+for reproducibility. Generated candidate output is not a successful deployment:
+verify the served files and access controls after approved publication.
 
 ## Consumption workflow
 
-Tell coding agents to:
+1. Read the current pointer through the authorized access path.
+2. Read its ready catalogue and any relevant published recipes/rules.
+3. Select records for the actual target framework and inspect exact supported APIs.
+4. Prefer an existing primitive, then a neutral extension, then an app adapter;
+   propose a new semantic family only when those do not express the need safely.
+5. Use a relevant approved recipe if one exists. Novel screens may compose supported
+   primitives without pretending the new composition is an approved reusable recipe.
+6. Keep product data, routing and business logic in the app; do not restyle private
+   canonical DOM or invent unsupported props.
+7. Run target-project validation and report gaps, blocked checks and source conflicts.
 
-1. Fetch `current.json`.
-2. Fetch the referenced catalogue and recipes.
-3. Select only `ready` records.
-4. Read exact component source, types, CSS, and contract.
-5. Choose the closest approved recipe.
-6. Implement product-specific composition without restyling canonical classes.
-7. Run prescribed validation.
-8. Report missing primitives or contradictions rather than inventing them.
+## Thin agent adapters
 
-## Agent instruction adapters
-
-Keep one canonical instruction source. Make Storybook, MCP, `AGENTS.md`, `CLAUDE.md`, or other agent-specific files thin adapters that point to it and restate only surface- or tool-specific commands.
-
-Include rules such as:
-
-- inventory is not a public API;
-- review items are not production-selectable;
-- never restyle design-system classes from application code;
-- prefer composition over local clones;
-- file a gap when required behavior is missing;
-- refresh the release pointer at task start;
-- retain source citations in generated module notes.
+Storybook, MCP, `AGENTS.md`, `CLAUDE.md` and skills should point to the same versioned
+contracts. Keep only surface/tool-specific instructions in adapters. A skill advises;
+repository and protected CI checks enforce admission. MCP exposes tools and context,
+not authority to promote, retire, accept visual baselines, merge or deploy. Distinguish
+configured tools from a tool actually exercised and a repair loop actually tested.

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "baselineMeaning": "Freeze line only; presence is not endorsement and changing this file is not approval.",
+  "policy": {
+    "featureLocalByDefault": true,
+    "recurrenceOpensReviewOnly": true,
+    "zeroConsumersOpensRetirementReviewOnly": true,
+    "automationMay": [
+      "detect",
+      "diagnose",
+      "repair-on-branch",
+      "generate-tests",
+      "generate-codemods",
+      "verify",
+      "open-reviewable-proposal"
+    ],
+    "automationMayNot": [
+      "promote",
+      "deprecate",
+      "delete",
+      "accept-visual-baseline",
+      "merge",
+      "deploy",
+      "rewrite-approval"
+    ]
+  },
+  "freezeLine": {
+    "capturedAt": "__RELEASED_AT__",
+    "publicComponentIds": [],
+    "sharedPlacementPaths": [],
+    "publishedStoryIds": []
+  },
+  "promotionApprovals": [],
+  "sharedPlacementApprovals": [],
+  "deprecationApprovals": [],
+  "storyApprovals": [],
+  "contractApprovals": [],
+  "retirementApprovals": []
+}

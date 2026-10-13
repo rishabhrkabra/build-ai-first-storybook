@@ -22,11 +22,14 @@ In greenfield work, the design system supplies the starting structure. In rehabi
 | Greenfield | The agent invents missing structure | Ready components, recipes, responsive rules, and examples |
 | Rehabilitation | The agent preserves incorrect structure | Everything required for greenfield, plus a replacement map, structural invariants, and before/after validation |
 
-Never infer the mode from prose or repository history. Require it as machine-readable task metadata.
+Infer mode from the explicit request and repository evidence, then record it
+when automation needs it. Ask only if ambiguity would materially change scope.
 
 ## Fail-closed task declaration
 
-Require a small sidecar in every consumer repository, for example `design-system.screen.json`:
+For substantial rehabilitation with automated consumer gates, record a small
+task declaration, for example `design-system.screen.json`. An audit or bounded
+maintenance task does not need an unrelated screen recipe or sidecar:
 
 ```json
 {
@@ -43,20 +46,24 @@ Require a small sidecar in every consumer repository, for example `design-system
 }
 ```
 
-The exact schema is system-specific, but the invariant is not: missing task mode, missing ready recipe, or missing evidence must fail validation. A command-line flag is insufficient because an agent can forget or omit it.
+The schema is project-specific. CI must check the declared scope and evidence
+required for that task. Use a ready recipe when one fits; otherwise identify the
+composition gap and propose a recipe without calling it canonical. Do not block
+safe unrelated work just because a novel composition awaits approval.
 
 ## Mandatory rehabilitation workflow
 
 1. Capture the existing interface at named viewports and meaningful states.
 2. Inventory behavior into `preserve`, `replace`, and `decision required`.
-3. Refresh the current design-system release and resolve one ready composition recipe.
+3. Refresh the current design-system release; use a relevant ready recipe if one fits, otherwise compose supported primitives and record the gap.
 4. Map existing regions to canonical owners: shell, navigation, selection, forms, overlays, data display, and conversation.
 5. Replace design-system-owned composites atomically. Do not cosmetically patch a cloned shell.
 6. Apply semantic tokens and documented layout/radius roles to product-owned content.
 7. Run static consumer validation before visual review.
 8. Capture the same states and viewports after the change.
 9. Compare before, after, and authority reference together.
-10. Record every consumer workaround; promote repeated workarounds into a component, token, rule, or recipe.
+10. Record consumer workarounds; recurrence opens review for a component, token,
+    rule or recipe. It does not automatically promote one.
 
 ## What the design system must own
 
@@ -84,7 +91,9 @@ Actions and selections are different concepts.
 - Current navigation uses navigation-current semantics.
 - Hover and focus are transient and must not be mistaken for persistent selection.
 
-Publish one canonical choice primitive when the same selected-pill or selected-card language recurs. Consumer validation should reject action-primary or inverse tokens inside selected states.
+Publish a canonical choice primitive when the same selection contract recurs.
+Validate against the project's semantic selection tokens; do not impose another
+project's colours or assume an inverse appearance is universally wrong.
 
 ### Layout grammar
 
@@ -111,7 +120,10 @@ Publish radius roles by semantic depth, not one generic radius scale:
 - pill;
 - icon-only action;
 
-State the optical nesting rule. Inner corners must be smaller than outer corners, and the radius difference should relate to the inset. Do the same for borders and shadows: only one layer should create separation unless the reference explicitly requires more.
+State the project's optical nesting rules and exceptions. Relating radii to
+inset often improves nested surfaces; it is not a universal prohibition on inner
+pills or other independent shapes. Document which border/shadow creates each
+separation, and avoid accidental stacked surfaces.
 
 ### Complete composite presets
 
@@ -119,12 +131,12 @@ If a composite has a common required configuration, expose a named preset rather
 
 ## Consumer validation rules
 
-Static validation should reject, at minimum:
+Configure static validation for the agreed scope to reject:
 
-- missing task declaration or unknown recipe;
+- missing task declaration when the project requires it for this task, or a claimed approved recipe that does not exist;
 - local clones of canonical shell components;
 - arbitrary design-system selector overrides;
-- selection states styled with primary-action tokens;
+- selection states that contradict the approved semantic selection contract (shared token values are not inherently invalid);
 - hard-coded spacing, radii, shadows, colors, or typography where semantic roles exist;
 - visible replacement controls for behavior the canonical component already owns;
 - missing required shell regions or utilities;
@@ -137,7 +149,7 @@ Static checks cannot prove visual quality, but they can prevent predictable stru
 
 ## Storybook requirements
 
-Include a dedicated `Rehabilitate Existing UI` entry with:
+For a system that supports rehabilitation workflows, provide discoverable guidance with:
 
 - task-mode decision table;
 - sidecar schema and runnable validation command;
@@ -158,16 +170,16 @@ Test rehabilitation separately from greenfield creation.
 Give a fresh agent:
 
 - a deliberately off-brand but functional interface;
-- the stable hosted design-system bootstrap only;
+- the stable authorized design-system interface (hosted, package or local);
 - a requirement to preserve behavior;
 - no expected component list or known-defect list.
 
 Automatic failures include:
 
-- only colors and typography change;
+- only colors and typography change when structural replacement was required;
 - a canonical shell remains locally recreated;
 - required navigation or utilities disappear;
-- persistent choices use primary-action styling;
+- persistent choices contradict the project's approved selection contract;
 - custom resize controls appear for canonical resize behavior;
 - dense content remains an undifferentiated ledger;
 - nested radii or spacing contradict the documented grammar;
@@ -189,4 +201,5 @@ A robust design system can encode most repeated quality:
 
 Human judgment remains valuable for genuinely novel information architecture, priority and emphasis, content-specific density exceptions, and final optical review. Do not use “taste” as an excuse for a missing repeated rule.
 
-When two rehabilitation tasks need the same manual correction, the design system is incomplete.
+Repeated manual correction is a signal to inspect the shared contract, not an
+automatic finding that different workflows need the same component.

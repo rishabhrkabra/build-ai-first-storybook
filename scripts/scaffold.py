@@ -5,12 +5,12 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
-import hashlib
 import json
 import pathlib
 import shutil
 import subprocess
 import sys
+from contract_io import ContractError, safe_path, authoring_hashes
 
 
 SKILL_ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -45,7 +45,11 @@ def main() -> int:
         print(f"Target repository does not exist: {target}", file=sys.stderr)
         return 2
 
-    destination = target / args.directory
+    try:
+        destination = safe_path(target, args.directory)
+    except ContractError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
     if destination.exists():
         print(f"Refusing to overwrite existing contract: {destination}", file=sys.stderr)
         return 3
@@ -63,20 +67,25 @@ def main() -> int:
         if not path.is_file() or path.suffix not in {".json", ".md", ".txt"}:
             continue
         content = path.read_text(encoding="utf-8")
-        for old, new in replacements.items():
-            content = content.replace(old, new)
+        def replace(value):
+            if isinstance(value, str):
+                for old, new in replacements.items():
+                    value = value.replace(old, new)
+            elif isinstance(value, list):
+                value = [replace(item) for item in value]
+            elif isinstance(value, dict):
+                value = {key: replace(item) for key, item in value.items()}
+            return value
+        content = json.dumps(replace(json.loads(content)), indent=2) + '\n' if path.suffix == '.json' else replace(content)
         path.write_text(content, encoding="utf-8")
 
     release_path = destination / "release.json"
     release = json.loads(release_path.read_text(encoding="utf-8"))
-    release["checksums"] = {
-        path.relative_to(destination).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in sorted(destination.rglob("*"))
-        if path.is_file() and path != release_path
-    }
+    manifest = json.loads((destination / 'manifest.json').read_text())
+    release["checksums"] = authoring_hashes(destination, manifest)
     release_path.write_text(json.dumps(release, indent=2) + "\n", encoding="utf-8")
 
-    print(destination)
+    print(f'Private authoring contract: {destination}\nDo not publish this directory. Use export_public.py.')
     return 0
 
 
